@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISI — Covert Actions Division | Application Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --bg2: #0a0d16;
+    --panel: #0d1120;
+    --border: #1a2240;
+    --accent: #00b4d8;
+    --accent2: #0077a8;
+    --red: #c0392b;
+    --gold: #c9a84c;
+    --text: #b8c8d8;
+    --text-dim: #4a5a70;
+    --text-bright: #e8f0f8;
+    --glow: rgba(0,180,216,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Grid bg */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,180,216,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,180,216,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: rgba(6,8,16,0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0,180,216,0.5);
+  }
+
+  .nav-logo span { color: var(--text-dim); font-size: 13px; font-family: 'Share Tech Mono', monospace; display: block; letter-spacing: 2px; margin-top: -4px; }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pulse-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--accent); }
+    50% { opacity: 0.3; box-shadow: none; }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 20px 40px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-bg-radial {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,119,168,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-emblem {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0,180,216,0.2), inset 0 0 30px rgba(0,180,216,0.05);
+    animation: rotate-border 20s linear infinite;
+  }
+
+  .hero-emblem::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,180,216,0.2);
+    animation: rotate-border 10s linear infinite reverse;
+  }
+
+  .hero-emblem::after {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,180,216,0.1);
+  }
+
+  .emblem-inner {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0,180,216,0.6);
+    letter-spacing: 2px;
+  }
+
+  @keyframes rotate-border {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .classified-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 3px 12px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    animation: flicker 4s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.4; }
+    97% { opacity: 1; }
+    98% { opacity: 0.2; }
+    99% { opacity: 1; }
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 100px);
+    letter-spacing: 8px;
+    color: var(--text-bright);
+    line-height: 1;
+    margin-bottom: 8px;
+    text-shadow: 0 0 60px rgba(0,180,216,0.2);
+    animation: fadein 1s ease forwards;
+  }
+
+  .hero h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(18px, 3vw, 28px);
+    letter-spacing: 12px;
+    color: var(--accent);
+    margin-bottom: 24px;
+    animation: fadein 1s 0.2s ease both;
+  }
+
+  .hero-desc {
+    max-width: 600px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 48px;
+    font-weight: 300;
+    animation: fadein 1s 0.4s ease both;
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadein 1s 0.6s ease both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    padding: 14px 40px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: #00d4f8;
+    box-shadow: 0 0 30px rgba(0,180,216,0.5);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    padding: 13px 36px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(0,180,216,0.1);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    animation: bounce 2s infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scroll-hint::after {
+    content: '▼';
+    font-size: 14px;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    letter-spacing: 4px;
+    color: var(--text-bright);
+    margin-bottom: 48px;
+  }
+
+  /* ── ABOUT GRID ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 48px;
+  }
+
+  .about-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .about-card:hover { border-color: var(--accent2); }
+
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .about-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .about-card p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 2px;
+  }
+
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(0,180,216,0.3);
+  }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* ── DIVISIONS ── */
+  .divisions-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .division-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    align-items: start;
+    gap: 0;
+    overflow: hidden;
+    transition: border-color 0.3s;
+    cursor: default;
+  }
+
+  .division-item:hover { border-color: var(--accent); }
+
+  .division-tag {
+    background: rgba(0,180,216,0.07);
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    height: 100%;
+  }
+
+  .division-tag .code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .division-tag .name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--text-bright);
+    line-height: 1.2;
+  }
+
+  .division-body {
+    padding: 24px 28px;
+  }
+
+  .division-body p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    font-weight: 300;
+    margin-bottom: 12px;
+  }
+
+  .division-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag-chip {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    border: 1px solid rgba(0,180,216,0.3);
+    padding: 3px 10px;
+  }
+
+  .division-clearance {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    border-left: 1px solid var(--border);
+  }
+
+  .clearance-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+
+  .clearance-level {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--gold);
+  }
+
+  /* ── REQUIREMENTS ── */
+  .req-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .req-list {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+
+  .req-list h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--text-bright);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .req-list h3 .icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .req-list ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .req-list li {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 400;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .req-list li::before {
+    content: '›';
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+
+  /* ── PROCESS ── */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    position: relative;
+  }
+
+  .process-step {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 28px 20px;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .process-step:hover { border-color: var(--accent); }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: rgba(0,180,216,0.15);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .step-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── APPLICATION FORM ── */
+  .form-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .form-wrap::before {
+    content: 'CLASSIFIED APPLICATION PORTAL';
+    position: absolute;
+    top: 16px; right: 24px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--border);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: rgba(0,180,216,0.04);
+    border: 1px solid var(--border);
+    color: var(--text-bright);
+    padding: 12px 16px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,180,216,0.1);
+  }
+
+  .form-group select option {
+    background: var(--bg2);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  .form-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--text-bright);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .form-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 32px;
+  }
+
+  .submit-note {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    max-width: 300px;
+    line-height: 1.6;
+  }
+
+  .btn-submit {
+    background: var(--accent);
+    color: #000;
+    padding: 16px 56px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: all 0.2s;
+  }
+
+  .btn-submit:hover {
+    background: #00d4f8;
+    box-shadow: 0 0 40px rgba(0,180,216,0.4);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+  }
+
+  .footer-note {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  .footer-classify {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--red);
+  }
+
+  /* ── DIVIDER ── */
+  .full-divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .division-item { grid-template-columns: 1fr; }
+    .division-clearance { display: none; }
+    .req-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-wrap { padding: 28px 20px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+    .submit-row { flex-direction: column; gap: 20px; align-items: flex-start; }
+  }
+
+  /* ── REDACTED EFFECT ── */
+  .redacted {
+    background: var(--text-dim);
+    color: transparent;
+    user-select: none;
+    border-radius: 2px;
+    padding: 0 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    ISI <span>INTER-SERVICES INTELLIGENCE</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#divisions">Divisions</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#apply">Apply</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="pulse-dot"></div>
+    PORTAL ACTIVE
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg-radial"></div>
+
+  <div class="classified-tag">⬛ TOP SECRET / SCI — AUTHORIZED PERSONNEL ONLY</div>
+
+  <div class="hero-emblem">
+    <span class="emblem-inner">ISI</span>
+  </div>
+
+  <h1>COVERT ACTIONS<br>DIVISION</h1>
+  <h2>Inter-Services Intelligence</h2>
+
+  <p class="hero-desc">
+    Pakistan's premier intelligence apparatus. The Covert Actions Division operates in the shadows, conducting sensitive operations where conventional forces cannot tread. We are the shield — and the sword.
+  </p>
+
+  <div class="hero-cta">
+    <a href="#apply" class="btn-primary">Submit Application</a>
+    <a href="#about" class="btn-secondary">Learn More</a>
+  </div>
+
+  <div class="scroll-hint">SCROLL DOWN</div>
+</div>
+
+<hr class="full-divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 / OVERVIEW</div>
+  <div class="section-title">About the ISI</div>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>Establishment</h3>
+      <p>The Inter-Services Intelligence was established in 1948, shortly after Pakistan's independence. Originally tasked with coordinating intelligence between the Pakistani military branches, it evolved into one of the most powerful and secretive intelligence agencies in the world. Within this MILSIM context, ISI represents the most elite and clandestine tier of the Pakistani defense apparatus.</p>
+    </div>
+    <div class="about-card">
+      <h3>Mandate</h3>
+      <p>ISI's mandate spans foreign intelligence gathering, counter-intelligence, counter-terrorism operations, and special covert operations. The Covert Actions Division is the sharpest instrument in that toolkit — handling missions that are deniable, sensitive, and of the highest national security priority. Operators work across all environments, often without recognition or attribution.</p>
+    </div>
+    <div class="about-card">
+      <h3>Structure</h3>
+      <p>ISI is headed by a Director General (DG) holding the rank of Lieutenant General. Below the DG, the organization is divided into multiple directorates handling different aspects of intelligence and covert operations. The Covert Actions Division operates under a separate chain of command with enhanced operational autonomy and is accountable directly to senior leadership.</p>
+    </div>
+    <div class="about-card">
+      <h3>Operational Philosophy</h3>
+      <p>ISI operates on a principle of strategic ambiguity — neither confirming nor denying involvement in operations. Operators are trained to maintain cover under all circumstances, operate with minimal footprint, and achieve objectives through precision rather than force of numbers. Discipline, discretion, and adaptability are non-negotiable traits.</p>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-num">1948</div>
+      <div class="stat-label">ESTABLISHED</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">T1</div>
+      <div class="stat-label">CLASSIFICATION</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">7+</div>
+      <div class="stat-label">ACTIVE DIRECTORATES</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">CAD</div>
+      <div class="stat-label">COVERT ACTIONS DIV</div>
+    </div>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- DIVISIONS -->
+<section id="divisions">
+  <div class="section-label">02 / STRUCTURE</div>
+  <div class="section-title">CAD Operational Wings</div>
+
+  <div class="divisions-wrap">
+
+    <div class="division-item">
+      <div class="division-tag">
+        <div class="code">CAD // W-I</div>
+        <div class="name">Special Operations Wing</div>
+      </div>
+      <div class="division-body">
+        <p>The direct action arm of the Covert Actions Division. Operators from W-I conduct targeted raids, high-value individual elimination or capture, and crisis intervention missions. Teams are small (4–6 operators), fast-moving, and trained to operate far behind adversary lines. All personnel are cross-trained in breaching, close-quarters combat, and SERE.</p>
+        <div class="division-tags-list">
+          <span class="tag-chip">DIRECT ACTION</span>
+          <span class="tag-chip">HVI TARGETING</span>
+          <span class="tag-chip">CQB</span>
+          <span class="tag-chip">HOSTAGE RESCUE</span>
+        </div>
+      </div>
+      <div class="division-clearance">
+        <span class="clearance-label">CLEARANCE</span>
+        <span class="clearance-level">TS/SCI</span>
+      </div>
+    </div>
+
+    <div class="division-item">
+      <div class="division-tag">
+        <div class="code">CAD // W-II</div>
+        <div class="name">Technical Intelligence Wing</div>
+      </div>
+      <div class="division-body">
+        <p>TECHINT specialists responsible for signals intelligence (SIGINT), electronic warfare, cyber operations, and surveillance. W-II operatives deploy advanced monitoring systems, intercept communications, and provide real-time intelligence feeds to ground teams. Increasingly active in the cyber domain, conducting network penetration and information denial operations.</p>
+        <div class="division-tags-list">
+          <span class="tag-chip">SIGINT</span>
+          <span class="tag-chip">CYBER OPS</span>
+          <span class="tag-chip">SURVEILLANCE</span>
+          <span class="tag-chip">ELINT</span>
+        </div>
+      </div>
+      <div class="division-clearance">
+        <span class="clearance-label">CLEARANCE</span>
+        <span class="clearance-level">TS/SCI</span>
+      </div>
+    </div>
+
+    <div class="division-item">
+      <div class="division-tag">
+        <div class="code">CAD // W-III</div>
+        <div class="name">Human Intelligence Wing</div>
+      </div>
+      <div class="division-body">
+        <p>HUMINT operatives are ISI's eyes and ears on the ground in denied territories. W-III manages agent networks, conducts undercover infiltration, and builds relationships with key foreign contacts. Operators maintain deep cover for extended periods, often living entirely within their cover identity. This wing is the foundation upon which all other CAD operations are built — without reliable intelligence, no mission succeeds.</p>
+        <div class="division-tags-list">
+          <span class="tag-chip">HUMINT</span>
+          <span class="tag-chip">UNDERCOVER OPS</span>
+          <span class="tag-chip">AGENT NETWORKS</span>
+          <span class="tag-chip">INFILTRATION</span>
+        </div>
+      </div>
+      <div class="division-clearance">
+        <span class="clearance-label">CLEARANCE</span>
+        <span class="clearance-level">TS/SCI</span>
+      </div>
+    </div>
+
+    <div class="division-item">
+      <div class="division-tag">
+        <div class="code">CAD // W-IV</div>
+        <div class="name">Counter-Intelligence Wing</div>
+      </div>
+      <div class="division-body">
+        <p>W-IV is tasked with protecting ISI operations from penetration by foreign intelligence services. This wing investigates potential moles, conducts internal security audits, and runs double-agent programs to feed disinformation to adversaries. Counter-intelligence operators are among the most analytically rigorous in the entire Division — their work is often invisible, but always critical.</p>
+        <div class="division-tags-list">
+          <span class="tag-chip">COUNTER-INTEL</span>
+          <span class="tag-chip">MOLE HUNTING</span>
+          <span class="tag-chip">DECEPTION OPS</span>
+          <span class="tag-chip">SECURITY AUDIT</span>
+        </div>
+      </div>
+      <div class="division-clearance">
+        <span class="clearance-label">CLEARANCE</span>
+        <span class="clearance-level">TS/SCI</span>
+      </div>
+    </div>
+
+    <div class="division-item">
+      <div class="division-tag">
+        <div class="code">CAD // W-V</div>
+        <div class="name">Psychological Operations Wing</div>
+      </div>
+      <div class="division-body">
+        <p>Information warfare, narrative control, and influence operations. W-V operators craft and disseminate strategic messaging to shape adversary decision-making, public opinion, and battlefield perception. Working at the intersection of intelligence, media, and psychology, this wing conducts operations that are often the most consequential — and the least visible. Domestic operations are strictly prohibited; all PSYOP activities target external audiences.</p>
+        <div class="division-tags-list">
+          <span class="tag-chip">PSYOP</span>
+          <span class="tag-chip">INFO WARFARE</span>
+          <span class="tag-chip">INFLUENCE OPS</span>
+          <span class="tag-chip">NARRATIVE CONTROL</span>
+        </div>
+      </div>
+      <div class="division-clearance">
+        <span class="clearance-label">CLEARANCE</span>
+        <span class="clearance-level">SECRET</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- REQUIREMENTS -->
+<section id="requirements">
+  <div class="section-label">03 / ELIGIBILITY</div>
+  <div class="section-title">Requirements</div>
+
+  <div class="req-grid">
+    <div class="req-list">
+      <h3><span class="icon">✓</span> Mandatory Requirements</h3>
+      <ul>
+        <li>Active member of the MILSIM group or affiliated unit in good standing</li>
+        <li>Minimum rank of E-4 / Corporal or equivalent, depending on branch of service</li>
+        <li>No active disciplinary actions, strikes, or pending investigations</li>
+        <li>Must be vouched for or recommended by a current ISI member or officer</li>
+        <li>Agreement to abide by all ISI operational security (OPSEC) protocols</li>
+        <li>Willingness to operate under strict command hierarchy and follow orders without hesitation</li>
+        <li>Demonstrated activity and engagement within the broader group</li>
+      </ul>
+    </div>
+    <div class="req-list">
+      <h3><span class="icon">★</span> Preferred Qualifications</h3>
+      <ul>
+        <li>Prior experience in a special operations or intelligence role in any MILSIM group</li>
+        <li>Strong communication skills and ability to write clear, structured after-action reports</li>
+        <li>Familiarity with covert operations doctrine and intelligence tradecraft</li>
+        <li>Ability to participate regularly in scheduled operations and training events</li>
+        <li>Demonstrated maturity, discretion, and ability to maintain confidentiality</li>
+        <li>Leadership experience or ability to independently command a small team</li>
+        <li>Experience with roleplay-heavy or scenario-driven MILSIM environments</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-label">04 / PIPELINE</div>
+  <div class="section-title">Selection Process</div>
+
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <span class="step-icon">📋</span>
+      <div class="step-title">Application</div>
+      <div class="step-desc">Submit your application through the portal below. All fields are mandatory. Incomplete submissions are automatically rejected.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <span class="step-icon">🔍</span>
+      <div class="step-title">Vetting</div>
+      <div class="step-desc">Background check against group records. Activity, conduct, and reputation are assessed. References may be contacted.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <span class="step-icon">🎙️</span>
+      <div class="step-title">Interview</div>
+      <div class="step-desc">Shortlisted candidates are invited to a one-on-one interview with senior ISI personnel. Expect scenario-based questioning.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <span class="step-icon">⚔️</span>
+      <div class="step-title">Assessment</div>
+      <div class="step-desc">Operational assessment exercise. Candidates demonstrate tactical decision-making, adaptability, and teamwork in a live scenario.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">05</div>
+      <span class="step-icon">🔖</span>
+      <div class="step-title">Induction</div>
+      <div class="step-desc">Successful candidates are assigned to a wing, issued clearance, and integrated into the Division under a senior handler.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- APPLICATION FORM -->
+<section id="apply">
+  <div class="section-label">05 / APPLICATION</div>
+  <div class="section-title">Submit Application</div>
+
+  <div class="form-wrap">
+
+    <div class="form-section-title">Personal Information</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Roblox Username</label>
+        <input type="text" placeholder="e.g. OperatorPakistan" />
+      </div>
+      <div class="form-group">
+        <label>Discord Tag</label>
+        <input type="text" placeholder="e.g. username#0000" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Current Rank</label>
+        <input type="text" placeholder="e.g. Corporal / E-4" />
+      </div>
+      <div class="form-group">
+        <label>Current Unit / Affiliation</label>
+        <input type="text" placeholder="e.g. SSG, Rangers, Frontier Corps..." />
+      </div>
+    </div>
+
+    <hr class="form-divider">
+    <div class="form-section-title">Operational Background</div>
+
+    <div class="form-group">
+      <label>Wing Preference</label>
+      <select>
+        <option value="" disabled selected>Select a preferred wing...</option>
+        <option>W-I — Special Operations Wing</option>
+        <option>W-II — Technical Intelligence Wing</option>
+        <option>W-III — Human Intelligence Wing</option>
+        <option>W-IV — Counter-Intelligence Wing</option>
+        <option>W-V — Psychological Operations Wing</option>
+        <option>No Preference — Place me where needed</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Prior MILSIM / Intelligence Experience</label>
+      <textarea placeholder="Describe any prior special operations or intelligence roles you have held in any MILSIM group. Include group name, role, and duration."></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Weekly Availability (hours)</label>
+        <input type="text" placeholder="e.g. 10–15 hours/week" />
+      </div>
+      <div class="form-group">
+        <label>Timezone</label>
+        <input type="text" placeholder="e.g. PKT (UTC+5)" />
+      </div>
+    </div>
+
+    <hr class="form-divider">
+    <div class="form-section-title">Screening Questions</div>
+
+    <div class="form-group">
+      <label>Why do you want to join ISI Covert Actions Division?</label>
+      <textarea placeholder="Be specific. Generic answers will result in immediate rejection."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Describe a scenario where you had to make a difficult operational decision under pressure. What did you do and what was the outcome?</label>
+      <textarea placeholder="This can be from any MILSIM, game, or real-life context."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Do you have a referral from a current ISI member? If yes, state their name and rank.</label>
+      <input type="text" placeholder="e.g. Sgt. [username] — or 'No referral'" />
+    </div>
+
+    <div class="form-group">
+      <label>Anything else you want the selection board to know?</label>
+      <textarea placeholder="Optional. Additional context, skills, languages spoken, etc."></textarea>
+    </div>
+
+    <div class="submit-row">
+      <div class="submit-note">
+        BY SUBMITTING YOU CONFIRM ALL INFORMATION IS ACCURATE AND AGREE TO ABIDE BY ALL ISI OPSEC REGULATIONS. FALSE INFORMATION IS GROUNDS FOR PERMANENT DISQUALIFICATION.
+      </div>
+      <button class="btn-submit">SUBMIT APPLICATION</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ISI — CAD</div>
+  <div class="footer-note">
+    INTER-SERVICES INTELLIGENCE // COVERT ACTIONS DIVISION<br>
+    THIS IS A ROBLOX MILSIM GROUP — ALL CONTENT IS FICTIONAL<br>
+    UNAUTHORIZED ACCESS TO THIS PORTAL IS PROHIBITED
+  </div>
+  <div class="footer-classify">⬛ TOP SECRET</div>
+</footer>
+
+</body>
+</html>
